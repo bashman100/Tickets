@@ -1,0 +1,46 @@
+{% extends '_partials/base.html' %}
+{% block content %}
+    <h3>{{ event.name }}</h3>
+    <p>
+      <b>Number of tikets: </b>{{ event.capacity }}
+    </p>
+    <p>{{ event.description }}</p>
+    <dl>
+      <dt>When:</dt>
+      <dd>{{ event.start_time }}</dd>
+      <dt>Tickets cost:</dt>
+      <dd>
+        {% if event.price %}
+          ${{event.price}}
+        {% else %}
+          Free
+        {% endif %}
+      </dd>
+    </dl>
+    {% if event.sold_out %}
+      <h2>Sorry this event is sold out</h2>
+    {% endif %}
+    <p>
+      Call Shary Hightower at (970)586-5321 to get your tickets
+    </p>
+    {% if event.owner == user or if user.is_superuser %}
+    <p>
+      <a class="button" href="{% url 'event_edit' pk=event.pk %}">Edit Event</a>
+      <a class="button delete" href="{% url 'event_delete' pk=event.pk %}">Delete Event</a>
+    </p>
+    {% endif %}
+{% endblock content %}
+{% block scripts %}
+<script>
+  var deleteButton = document.querySelector('a.delete');
+
+  deleteButton.addEventListener('click', function(e) {
+    var confirmed = window.confirm('Are you sure you want to delete this event?');
+
+    if ( !confirmed ) {
+      e.preventDefault();
+      return false;
+    };
+  });
+</script>
+{% endblock scripts %}
